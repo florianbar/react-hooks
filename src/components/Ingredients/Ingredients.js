@@ -17,17 +17,24 @@ const Ingredients = () => {
       body: JSON.stringify(ingredient),
       headers: { "Content-Type": "application/json" }
     })
-    .then(response => response.json())
-    .then(responseData => {
-      setUserIngredients(prevIngredients => [
-        ...prevIngredients,
-        { id: responseData.name, ...ingredient }
-      ]);
-    });
+      .then(response => response.json())
+      .then(responseData => {
+        setUserIngredients(prevIngredients => [
+          ...prevIngredients,
+          { id: responseData.name, ...ingredient }
+        ]);
+      });
   };
 
   const removeIngredientHandler = id => {
-    setUserIngredients(prevIngredients => prevIngredients.filter(item => item.id !== id));
+    fetch(
+      `https://react-hooks-flo.firebaseio.com/ingredients/${id}.json/`, 
+      {
+        method: "DELETE"    
+      }
+    ).then(response => {
+      setUserIngredients(prevIngredients => prevIngredients.filter(item => item.id !== id));
+    });
   };
 
   return (
